@@ -1,0 +1,7 @@
+# robots.txt for Beinbe Ginseng Slim Profile
+User-agent: *
+Allow: /
+
+# Sitemap references
+Sitemap: https://beinbe.com/sitemap.xml
+Sitemap: https://beinbe-ritual.647fzperh2hs.workers.dev/sitemap-index.xml

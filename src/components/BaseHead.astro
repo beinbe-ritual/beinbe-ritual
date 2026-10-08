@@ -2,7 +2,6 @@
 // Import global styling
 import '../styles/global.css';
 import { profileData } from '../data/profile';
-import { convertDriveLink } from '../utils/helpers';
 import { CANONICAL_URL } from '../consts';
 
 interface Props {
@@ -12,23 +11,44 @@ interface Props {
 	canonicalUrl?: string;
 }
 
+const siteOrigin = Astro.site
+	? Astro.site.origin
+	: "https://beinbe-ritual.647fzperh2hs.workers.dev";
+
 const defaultCanonical = Astro.site
 	? new URL(Astro.url.pathname, Astro.site).toString()
 	: CANONICAL_URL;
 
+const fullImageUrl = profileData.media.background_1200x600.startsWith('http')
+	? profileData.media.background_1200x600
+	: new URL(profileData.media.background_1200x600, siteOrigin).toString();
+
+const fullLogoUrl = profileData.media.logo_500x500.startsWith('http')
+	? profileData.media.logo_500x500
+	: new URL(profileData.media.logo_500x500, siteOrigin).toString();
+
 const {
 	title = "Beinbe Ginseng Slim – Thương Hiệu Chăm Sóc Sức Khỏe Cho Người Bận Rộn",
 	description = "01 gói mỗi ngày hỗ trợ quản lý vóc dáng, chống oxy hóa và tăng cường trí nhớ. Thành phần thiên nhiên minh bạch, kiểm nghiệm bởi Viện Pasteur.",
-	image = convertDriveLink(profileData.media.background_1200x600),
+	image = fullImageUrl,
 	canonicalUrl = defaultCanonical,
 } = Astro.props;
 
-const directLogo = convertDriveLink(profileData.media.logo_500x500);
-
-// Structured Data (JSON-LD) for ProfilePage & Organization
+// Schema.org Structured Data Graph (Rich Snippets)
 const schemaOrg = {
 	"@context": "https://schema.org",
 	"@graph": [
+		{
+			"@type": "WebSite",
+			"@id": `${siteOrigin}/#website`,
+			"url": siteOrigin,
+			"name": "Beinbe Ginseng Slim Official Profile",
+			"description": description,
+			"publisher": {
+				"@id": `${profileData.social_links.website}#organization`
+			},
+			"inLanguage": "vi"
+		},
 		{
 			"@type": "ProfilePage",
 			"@id": canonicalUrl,
@@ -36,27 +56,62 @@ const schemaOrg = {
 			"name": title,
 			"description": description,
 			"isPartOf": {
-				"@type": "WebSite",
-				"url": Astro.site ? Astro.site.toString() : "https://beinbe-ritual.647fzperh2hs.workers.dev/",
-				"name": "Beinbe Ritual Profile"
+				"@id": `${siteOrigin}/#website`
+			},
+			"primaryImageOfPage": {
+				"@type": "ImageObject",
+				"url": image,
+				"caption": "Beinbe Ginseng Slim - True Beauty Inside"
 			},
 			"about": {
+				"@id": `${profileData.social_links.website}#organization`
+			},
+			"mainEntity": {
 				"@id": `${profileData.social_links.website}#organization`
 			}
 		},
 		{
-			"@type": "Organization",
+			"@type": "BreadcrumbList",
+			"@id": `${canonicalUrl}#breadcrumb`,
+			"itemListElement": [
+				{
+					"@type": "ListItem",
+					"position": 1,
+					"name": "Trang Chủ",
+					"item": siteOrigin
+				},
+				{
+					"@type": "ListItem",
+					"position": 2,
+					"name": "Hồ Sơ Thương Hiệu Beinbe",
+					"item": canonicalUrl
+				}
+			]
+		},
+		{
+			"@type": ["Organization", "Brand"],
 			"@id": `${profileData.social_links.website}#organization`,
 			"name": profileData.brand.full_name,
-			"alternateName": profileData.brand.title_social_short,
+			"alternateName": [
+				profileData.brand.title_social_short,
+				"Beinbe Ritual",
+				"Beinbe Vietnam"
+			],
 			"url": profileData.social_links.website,
-			"logo": directLogo,
+			"logo": {
+				"@type": "ImageObject",
+				"url": fullLogoUrl,
+				"caption": `Logo ${profileData.brand.full_name}`
+			},
+			"image": fullImageUrl,
+			"slogan": "True Beauty Inside - 01 gói mỗi ngày chăm sóc vóc dáng, chống oxy hóa và tăng cường trí nhớ",
 			"description": profileData.description.long,
 			"address": {
 				"@type": "PostalAddress",
 				"streetAddress": "Tầng 15, Tòa nhà Vincom Center, 72 Lê Thánh Tôn",
-				"addressLocality": "Quận 1",
-				"addressRegion": "TP. Hồ Chí Minh",
+				"addressLocality": "Bến Nghé",
+				"addressRegion": "Quận 1, TP. Hồ Chí Minh",
+				"postalCode": "700000",
 				"addressCountry": "VN"
 			},
 			"contactPoint": {
@@ -64,8 +119,17 @@ const schemaOrg = {
 				"telephone": profileData.contact.hotline,
 				"contactType": "customer service",
 				"email": profileData.contact.email,
+				"areaServed": "VN",
 				"availableLanguage": ["Vietnamese", "English"]
 			},
+			"knowsAbout": [
+				"Chăm sóc vóc dáng",
+				"Chống oxy hóa",
+				"Tăng cường trí nhớ",
+				"Sâm Ginseng Slim",
+				"Lối sống lành mạnh",
+				"Thực phẩm bảo vệ sức khỏe"
+			],
 			"sameAs": [
 				profileData.social_links.website,
 				profileData.social_links.business_site,
@@ -82,41 +146,104 @@ const schemaOrg = {
 };
 ---
 
-<!-- Global Metadata -->
+<!-- Core Technical Metadata -->
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="generator" content={Astro.generator} />
 
-<!-- Font preloads -->
-<link rel="preload" href="/fonts/atkinson-regular.woff" as="font" type="font/woff" crossorigin />
-<link rel="preload" href="/fonts/atkinson-bold.woff" as="font" type="font/woff" crossorigin />
+<!-- Robots & Crawler Directives -->
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+<meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+<meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
 
 <!-- Canonical URL -->
 <link rel="canonical" href={canonicalUrl} />
 
-<!-- Primary Meta Tags -->
+<!-- Internationalization & Hreflang -->
+<link rel="alternate" hreflang="vi" href={canonicalUrl} />
+<link rel="alternate" hreflang="vi-VN" href={canonicalUrl} />
+<link rel="alternate" hreflang="x-default" href={canonicalUrl} />
+
+<!-- Primary Search Meta Tags -->
 <title>{title}</title>
 <meta name="title" content={title} />
 <meta name="description" content={description} />
-<meta name="keywords" content="beinbe, ginsengslim, beinbeginsengslim, dailyslimritual, deptubentrong, thực phẩm chức năng, chăm sóc sức khỏe" />
+<meta name="keywords" content="beinbe, ginsengslim, beinbeginsengslim, dailyslimritual, deptubentrong, thực phẩm chức năng, chăm sóc sức khỏe, sâm giảm cân, chống oxy hóa" />
 <meta name="author" content="Beinbe Ginseng Slim" />
-<meta name="theme-color" content="#1b5e20" />
+<meta name="copyright" content="Beinbe Ginseng Slim" />
 
-<!-- Open Graph / Facebook -->
+<!-- Geo & Local SEO Tags (Vincom Center HCM) -->
+<meta name="geo.region" content="VN-SG" />
+<meta name="geo.placename" content="Hồ Chí Minh" />
+<meta name="geo.position" content="10.7780;106.7020" />
+<meta name="ICBM" content="10.7780, 106.7020" />
+
+<!-- Dublin Core Authority Metadata -->
+<meta name="DC.title" content={title} />
+<meta name="DC.creator" content="Beinbe Ginseng Slim" />
+<meta name="DC.subject" content="Chăm sóc sức khỏe, vóc dáng, Ginseng Slim" />
+<meta name="DC.description" content={description} />
+<meta name="DC.publisher" content="Beinbe" />
+<meta name="DC.language" content="vi" />
+<meta name="DC.coverage" content="Vietnam" />
+
+<!-- Open Graph / Facebook / Zalo -->
 <meta property="og:type" content="profile" />
+<meta property="og:locale" content="vi_VN" />
 <meta property="og:url" content={canonicalUrl} />
 <meta property="og:site_name" content="Beinbe Ginseng Slim" />
 <meta property="og:title" content={title} />
 <meta property="og:description" content={description} />
 <meta property="og:image" content={image} />
+<meta property="og:image:secure_url" content={image} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="600" />
+<meta property="og:image:type" content="image/png" />
+<meta property="og:image:alt" content="Banner thương hiệu Beinbe Ginseng Slim - True Beauty Inside" />
 
-<!-- Twitter -->
+<!-- Open Graph Social Entity Links -->
+<meta property="og:see_also" content={profileData.social_links.website} />
+<meta property="og:see_also" content={profileData.social_links.facebook} />
+<meta property="og:see_also" content={profileData.social_links.instagram} />
+<meta property="og:see_also" content={profileData.social_links.tiktok} />
+<meta property="og:see_also" content={profileData.social_links.youtube} />
+<meta property="og:see_also" content={profileData.social_links.twitter} />
+<meta property="og:see_also" content={profileData.social_links.linkedin} />
+<meta property="og:see_also" content={profileData.social_links.pinterest} />
+
+<!-- Twitter Cards -->
 <meta property="twitter:card" content="summary_large_image" />
+<meta property="twitter:site" content="@BeinbeGins2pu3" />
+<meta property="twitter:creator" content="@BeinbeGins2pu3" />
 <meta property="twitter:url" content={canonicalUrl} />
 <meta property="twitter:title" content={title} />
 <meta property="twitter:description" content={description} />
 <meta property="twitter:image" content={image} />
+<meta property="twitter:image:alt" content="Beinbe Ginseng Slim - True Beauty Inside" />
 
-<!-- Structured Data (Schema.org JSON-LD) -->
+<!-- Favicon, App Icons & Mobile Browser Styling -->
+<link rel="icon" type="image/jpeg" href="/images/logo-500x500.jpg" />
+<link rel="apple-touch-icon" sizes="180x180" href="/images/logo-500x500.jpg" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="default" />
+<meta name="apple-mobile-web-app-title" content="Beinbe" />
+<meta name="application-name" content="Beinbe Ginseng Slim" />
+<meta name="theme-color" content="#1b5e20" />
+<meta name="msapplication-TileColor" content="#1b5e20" />
+<meta name="msapplication-TileImage" content="/images/logo-500x500.jpg" />
+
+<!-- Resource Discovery & Preconnections -->
+<link rel="preconnect" href="https://beinbe.com" crossorigin />
+<link rel="dns-prefetch" href="https://beinbe.com" />
+<link rel="sitemap" type="application/xml" href="/sitemap-index.xml" />
+<link rel="alternate" type="application/rss+xml" title="Beinbe Ginseng Slim RSS Feed" href="/rss.xml" />
+
+<!-- Font & Image Preloads for Core Web Vitals -->
+<link rel="preload" href="/fonts/atkinson-regular.woff" as="font" type="font/woff" crossorigin />
+<link rel="preload" href="/fonts/atkinson-bold.woff" as="font" type="font/woff" crossorigin />
+<link rel="preload" as="image" href="/images/banner-1200x600.png" />
+<link rel="preload" as="image" href="/images/logo-500x500.jpg" />
+
+<!-- Schema.org JSON-LD Structured Data Graph -->
 <script type="application/ld+json" set:html={JSON.stringify(schemaOrg)} />

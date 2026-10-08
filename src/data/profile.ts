@@ -77,10 +77,8 @@ export const profileData: ProfileData = {
 		google_maps: "Sẽ update sau",
 	},
 	media: {
-		logo_500x500:
-			"https://drive.google.com/file/d/18hsDnawCUS4QyBjSEMZlY0RHyjUBYapj/view?usp=sharing",
-		background_1200x600:
-			"https://drive.google.com/file/d/1kOSskhxpwkCTe5N0DdaPGc3j3f7AQnDg/view?usp=drive_link",
+		logo_500x500: "/images/logo-500x500.jpg",
+		background_1200x600: "/images/banner-1200x600.png",
 	},
 	personal_info: {
 		gender: "Nữ",

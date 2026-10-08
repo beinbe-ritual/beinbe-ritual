@@ -3,6 +3,7 @@
 import '../styles/global.css';
 import { profileData } from '../data/profile';
 import { convertDriveLink } from '../utils/helpers';
+import { CANONICAL_URL } from '../consts';
 
 interface Props {
 	title?: string;
@@ -11,48 +12,72 @@ interface Props {
 	canonicalUrl?: string;
 }
 
+const defaultCanonical = Astro.site
+	? new URL(Astro.url.pathname, Astro.site).toString()
+	: CANONICAL_URL;
+
 const {
 	title = "Beinbe Ginseng Slim – Thương Hiệu Chăm Sóc Sức Khỏe Cho Người Bận Rộn",
 	description = "01 gói mỗi ngày hỗ trợ quản lý vóc dáng, chống oxy hóa và tăng cường trí nhớ. Thành phần thiên nhiên minh bạch, kiểm nghiệm bởi Viện Pasteur.",
 	image = convertDriveLink(profileData.media.background_1200x600),
-	canonicalUrl = "https://beinbe.com/",
+	canonicalUrl = defaultCanonical,
 } = Astro.props;
 
 const directLogo = convertDriveLink(profileData.media.logo_500x500);
 
-// Structured Data (JSON-LD) for Organization
+// Structured Data (JSON-LD) for ProfilePage & Organization
 const schemaOrg = {
 	"@context": "https://schema.org",
-	"@type": "Organization",
-	"name": profileData.brand.full_name,
-	"alternateName": profileData.brand.title_social_short,
-	"url": profileData.social_links.website,
-	"logo": directLogo,
-	"description": profileData.description.long,
-	"address": {
-		"@type": "PostalAddress",
-		"streetAddress": "Tầng 15, Tòa nhà Vincom Center, 72 Lê Thánh Tôn",
-		"addressLocality": "Quận 1",
-		"addressRegion": "TP. Hồ Chí Minh",
-		"addressCountry": "VN"
-	},
-	"contactPoint": {
-		"@type": "ContactPoint",
-		"telephone": profileData.contact.hotline,
-		"contactType": "customer service",
-		"email": profileData.contact.email,
-		"availableLanguage": ["Vietnamese", "English"]
-	},
-	"sameAs": [
-		profileData.social_links.website,
-		profileData.social_links.business_site,
-		profileData.social_links.facebook,
-		profileData.social_links.instagram,
-		profileData.social_links.twitter,
-		profileData.social_links.tiktok,
-		profileData.social_links.youtube,
-		profileData.social_links.pinterest,
-		profileData.social_links.linkedin
+	"@graph": [
+		{
+			"@type": "ProfilePage",
+			"@id": canonicalUrl,
+			"url": canonicalUrl,
+			"name": title,
+			"description": description,
+			"isPartOf": {
+				"@type": "WebSite",
+				"url": Astro.site ? Astro.site.toString() : "https://beinbe-ritual.647fzperh2hs.workers.dev/",
+				"name": "Beinbe Ritual Profile"
+			},
+			"about": {
+				"@id": `${profileData.social_links.website}#organization`
+			}
+		},
+		{
+			"@type": "Organization",
+			"@id": `${profileData.social_links.website}#organization`,
+			"name": profileData.brand.full_name,
+			"alternateName": profileData.brand.title_social_short,
+			"url": profileData.social_links.website,
+			"logo": directLogo,
+			"description": profileData.description.long,
+			"address": {
+				"@type": "PostalAddress",
+				"streetAddress": "Tầng 15, Tòa nhà Vincom Center, 72 Lê Thánh Tôn",
+				"addressLocality": "Quận 1",
+				"addressRegion": "TP. Hồ Chí Minh",
+				"addressCountry": "VN"
+			},
+			"contactPoint": {
+				"@type": "ContactPoint",
+				"telephone": profileData.contact.hotline,
+				"contactType": "customer service",
+				"email": profileData.contact.email,
+				"availableLanguage": ["Vietnamese", "English"]
+			},
+			"sameAs": [
+				profileData.social_links.website,
+				profileData.social_links.business_site,
+				profileData.social_links.facebook,
+				profileData.social_links.instagram,
+				profileData.social_links.twitter,
+				profileData.social_links.tiktok,
+				profileData.social_links.youtube,
+				profileData.social_links.pinterest,
+				profileData.social_links.linkedin
+			]
+		}
 	]
 };
 ---
@@ -79,7 +104,7 @@ const schemaOrg = {
 <meta name="theme-color" content="#1b5e20" />
 
 <!-- Open Graph / Facebook -->
-<meta property="og:type" content="website" />
+<meta property="og:type" content="profile" />
 <meta property="og:url" content={canonicalUrl} />
 <meta property="og:site_name" content="Beinbe Ginseng Slim" />
 <meta property="og:title" content={title} />

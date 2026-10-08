@@ -2,6 +2,9 @@
 
 Trang hồ sơ thương hiệu (Profile Page / Single Page Profile Landing Page) cho **Beinbe Ginseng Slim** (`beinbe.ritual`), được xây dựng trên nền tảng **Astro 5** kết hợp adapter **Cloudflare Workers**.
 
+- 🌐 **Domain Profile Page (Trang này):** `https://beinbe-ritual.647fzperh2hs.workers.dev/`
+- 🎯 **Moneypage (Website sản phẩm chính):** `https://beinbe.com/`
+
 ---
 
 ## 🌟 Tổng Quan Giao Diện & Layout

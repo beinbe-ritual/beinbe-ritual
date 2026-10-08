@@ -1,62 +1,137 @@
 ---
-import Layout from '../layouts/BlogPost.astro';
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { profileData } from '../data/profile';
+import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+import { convertDriveLink } from '../utils/helpers';
+
+const directLogo = convertDriveLink(profileData.media.logo_500x500);
+const directBg = convertDriveLink(profileData.media.background_1200x600);
 ---
 
-<Layout
-	title="About Me"
-	description="Lorem ipsum dolor sit amet"
-	pubDate={new Date('August 08 2021')}
-	heroImage="/blog-placeholder-about.jpg"
->
-	<p>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-		labore et dolore magna aliqua. Vitae ultricies leo integer malesuada nunc vel risus commodo
-		viverra. Adipiscing enim eu turpis egestas pretium. Euismod elementum nisi quis eleifend quam
-		adipiscing. In hac habitasse platea dictumst vestibulum. Sagittis purus sit amet volutpat. Netus
-		et malesuada fames ac turpis egestas. Eget magna fermentum iaculis eu non diam phasellus
-		vestibulum lorem. Varius sit amet mattis vulputate enim. Habitasse platea dictumst quisque
-		sagittis. Integer quis auctor elit sed vulputate mi. Dictumst quisque sagittis purus sit amet.
-	</p>
+<!doctype html>
+<html lang="vi">
+	<head>
+		<BaseHead
+			title={`Giới Thiệu | ${profileData.brand.full_name}`}
+			description={profileData.description.long}
+		/>
+	</head>
+	<body>
+		<Header />
+		<main>
+			<article class="card about-page-card">
+				<div class="banner-box">
+					<img src={directBg} alt={profileData.brand.full_name} class="about-banner" />
+				</div>
+				<div class="about-content">
+					<div class="logo-circle">
+						<img src={directLogo} alt={`Logo ${profileData.brand.full_name}`} width="100" height="100" />
+					</div>
+					<h1>Về Thương Hiệu {profileData.brand.full_name}</h1>
+					<p class="lead-text">{profileData.description.short}</p>
+					
+					<h2>Sứ Mệnh & Giá Trị Cốt Lõi</h2>
+					<p>{profileData.description.long}</p>
 
-	<p>
-		Morbi tristique senectus et netus. Id semper risus in hendrerit gravida rutrum quisque non
-		tellus. Habitasse platea dictumst quisque sagittis purus sit amet. Tellus molestie nunc non
-		blandit massa. Cursus vitae congue mauris rhoncus. Accumsan tortor posuere ac ut. Fringilla urna
-		porttitor rhoncus dolor. Elit ullamcorper dignissim cras tincidunt lobortis. In cursus turpis
-		massa tincidunt dui ut ornare lectus. Integer feugiat scelerisque varius morbi enim nunc.
-		Bibendum neque egestas congue quisque egestas diam. Cras ornare arcu dui vivamus arcu felis
-		bibendum. Dignissim suspendisse in est ante in nibh mauris. Sed tempus urna et pharetra pharetra
-		massa massa ultricies mi.
-	</p>
+					<div class="info-meta-box">
+						<p><strong>Chân dung thương hiệu:</strong> {profileData.personal_info.gender}</p>
+						<p><strong>Ngày thành lập / Ra mắt:</strong> {profileData.personal_info.birthday}</p>
+						<p><strong>Website chính thức:</strong> <a href={profileData.social_links.website} target="_blank" rel="noopener noreferrer">beinbe.com</a></p>
+					</div>
 
-	<p>
-		Mollis nunc sed id semper risus in. Convallis a cras semper auctor neque. Diam sit amet nisl
-		suscipit. Lacus viverra vitae congue eu consequat ac felis donec. Egestas integer eget aliquet
-		nibh praesent tristique magna sit amet. Eget magna fermentum iaculis eu non diam. In vitae
-		turpis massa sed elementum. Tristique et egestas quis ipsum suspendisse ultrices. Eget lorem
-		dolor sed viverra ipsum. Vel turpis nunc eget lorem dolor sed viverra. Posuere ac ut consequat
-		semper viverra nam. Laoreet suspendisse interdum consectetur libero id faucibus. Diam phasellus
-		vestibulum lorem sed risus ultricies tristique. Rhoncus dolor purus non enim praesent elementum
-		facilisis. Ultrices tincidunt arcu non sodales neque. Tempus egestas sed sed risus pretium quam
-		vulputate. Viverra suspendisse potenti nullam ac tortor vitae purus faucibus ornare. Fringilla
-		urna porttitor rhoncus dolor purus non. Amet dictum sit amet justo donec enim.
-	</p>
+					<div class="back-link">
+						<a href="/" class="btn-back">← Quay lại trang hồ sơ cá nhân</a>
+					</div>
+				</div>
+			</article>
+		</main>
+		<Footer />
+	</body>
+</html>
 
-	<p>
-		Mattis ullamcorper velit sed ullamcorper morbi tincidunt. Tortor posuere ac ut consequat semper
-		viverra. Tellus mauris a diam maecenas sed enim ut sem viverra. Venenatis urna cursus eget nunc
-		scelerisque viverra mauris in. Arcu ac tortor dignissim convallis aenean et tortor at. Curabitur
-		gravida arcu ac tortor dignissim convallis aenean et tortor. Egestas tellus rutrum tellus
-		pellentesque eu. Fusce ut placerat orci nulla pellentesque dignissim enim sit amet. Ut enim
-		blandit volutpat maecenas volutpat blandit aliquam etiam. Id donec ultrices tincidunt arcu. Id
-		cursus metus aliquam eleifend mi.
-	</p>
-
-	<p>
-		Tempus quam pellentesque nec nam aliquam sem. Risus at ultrices mi tempus imperdiet. Id porta
-		nibh venenatis cras sed felis eget velit. Ipsum a arcu cursus vitae. Facilisis magna etiam
-		tempor orci eu lobortis elementum. Tincidunt dui ut ornare lectus sit. Quisque non tellus orci
-		ac. Blandit libero volutpat sed cras. Nec tincidunt praesent semper feugiat nibh sed pulvinar
-		proin gravida. Egestas integer eget aliquet nibh praesent tristique magna.
-	</p>
-</Layout>
+<style>
+	.about-page-card {
+		overflow: hidden;
+		margin-top: 1rem;
+	}
+	.banner-box {
+		width: 100%;
+		height: 220px;
+		background: #1b5e20;
+		overflow: hidden;
+	}
+	.about-banner {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+	.about-content {
+		padding: 2rem;
+		position: relative;
+	}
+	.logo-circle {
+		width: 100px;
+		height: 100px;
+		margin-top: -65px;
+		margin-bottom: 1rem;
+		border-radius: 50%;
+		border: 4px solid #fff;
+		overflow: hidden;
+		box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+		background: #fff;
+	}
+	.logo-circle img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+	h1 {
+		color: #1b5e20;
+		font-size: 1.8rem;
+		margin-bottom: 0.5rem;
+	}
+	.lead-text {
+		font-size: 1.1rem;
+		color: #4b5563;
+		font-weight: 500;
+		border-left: 3px solid #4caf50;
+		padding-left: 1rem;
+		margin: 1.25rem 0;
+	}
+	h2 {
+		color: #1b5e20;
+		font-size: 1.3rem;
+		margin-top: 1.5rem;
+		margin-bottom: 0.5rem;
+	}
+	.info-meta-box {
+		background: #f8faf8;
+		border: 1px solid rgba(27, 94, 32, 0.12);
+		padding: 1rem 1.25rem;
+		border-radius: 12px;
+		margin: 1.5rem 0;
+	}
+	.info-meta-box p {
+		margin-bottom: 0.5rem;
+	}
+	.info-meta-box p:last-child {
+		margin-bottom: 0;
+	}
+	.back-link {
+		margin-top: 2rem;
+	}
+	.btn-back {
+		display: inline-block;
+		background: #1b5e20;
+		color: #ffffff;
+		padding: 0.6rem 1.25rem;
+		border-radius: 8px;
+		font-weight: 700;
+	}
+	.btn-back:hover {
+		background: #2e7d32;
+		color: #ffffff;
+	}
+</style>

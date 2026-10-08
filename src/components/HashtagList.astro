@@ -1,0 +1,278 @@
+---
+import { parseHashtags } from '../utils/helpers';
+
+interface Props {
+	hashtags: string;
+}
+
+const { hashtags } = Astro.props;
+const tagList = parseHashtags(hashtags);
+---
+
+<section id="hashtags" class="hashtags-section">
+	<div class="card hashtags-card">
+		<div class="hashtags-header">
+			<div class="title-group">
+				<div class="icon-pill">
+					<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18">
+						<line x1="4" y1="9" x2="20" y2="9"></line>
+						<line x1="4" y1="15" x2="20" y2="15"></line>
+						<line x1="10" y1="3" x2="8" y2="21"></line>
+						<line x1="16" y1="3" x2="14" y2="21"></line>
+					</svg>
+					<span>Hashtags Thương Hiệu</span>
+				</div>
+				<h2 class="card-title">Cộng Đồng & Từ Khóa Nổi Bật</h2>
+			</div>
+
+			<button
+				id="btn-copy-all-hashtags"
+				class="btn-copy"
+				data-hashtags={hashtags}
+				title="Sao chép toàn bộ danh sách hashtag"
+			>
+				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" class="copy-icon">
+					<rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+					<path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+				</svg>
+				<span class="btn-text">Sao chép tất cả</span>
+			</button>
+		</div>
+
+		<div class="hashtags-container">
+			{tagList.map((tag) => (
+				<button
+					type="button"
+					class="tag-chip"
+					data-tag={tag}
+					title={`Nhấn để sao chép ${tag}`}
+				>
+					<span class="hash-symbol">#</span>
+					<span class="tag-label">{tag.replace(/^#/, '')}</span>
+				</button>
+			))}
+		</div>
+
+		<div id="copy-feedback-toast" class="copy-toast" aria-live="polite">
+			Đã sao chép hashtag vào bộ nhớ tạm!
+		</div>
+	</div>
+</section>
+
+<script>
+	function setupHashtagCopy() {
+		const toast = document.getElementById('copy-feedback-toast');
+		const copyAllBtn = document.getElementById('btn-copy-all-hashtags');
+		const tagChips = document.querySelectorAll('.tag-chip');
+
+		function showToast(message: string) {
+			if (!toast) return;
+			toast.textContent = message;
+			toast.classList.add('visible');
+			setTimeout(() => {
+				toast.classList.remove('visible');
+			}, 2500);
+		}
+
+		async function copyText(text: string, successMsg: string) {
+			try {
+				if (navigator.clipboard && navigator.clipboard.writeText) {
+					await navigator.clipboard.writeText(text);
+				} else {
+					const textarea = document.createElement('textarea');
+					textarea.value = text;
+					textarea.style.position = 'fixed';
+					textarea.style.opacity = '0';
+					document.body.appendChild(textarea);
+					textarea.select();
+					document.execCommand('copy');
+					document.body.removeChild(textarea);
+				}
+				showToast(successMsg);
+			} catch (err) {
+				console.error('Không thể sao chép:', err);
+				showToast('Lỗi khi sao chép!');
+			}
+		}
+
+		if (copyAllBtn) {
+			copyAllBtn.addEventListener('click', () => {
+				const tags = copyAllBtn.getAttribute('data-hashtags') || '';
+				copyText(tags, 'Đã sao chép toàn bộ hashtag!');
+				const btnText = copyAllBtn.querySelector('.btn-text');
+				if (btnText) {
+					const orig = btnText.textContent;
+					btnText.textContent = '✓ Đã sao chép!';
+					setTimeout(() => {
+						btnText.textContent = orig;
+					}, 2000);
+				}
+			});
+		}
+
+		tagChips.forEach((chip) => {
+			chip.addEventListener('click', () => {
+				const tag = chip.getAttribute('data-tag') || '';
+				copyText(tag, `Đã sao chép ${tag}!`);
+				chip.classList.add('copied');
+				setTimeout(() => {
+					chip.classList.remove('copied');
+				}, 1000);
+			});
+		});
+	}
+
+	// Run on initial load and after Astro page swaps
+	setupHashtagCopy();
+	document.addEventListener('astro:page-load', setupHashtagCopy);
+</script>
+
+<style>
+	.hashtags-section {
+		margin-bottom: 2.5rem;
+	}
+
+	.hashtags-card {
+		background: #ffffff;
+		border: 1px solid rgba(27, 94, 32, 0.12);
+		border-radius: 20px;
+		padding: 1.75rem 2rem;
+		box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+		position: relative;
+	}
+
+	.hashtags-header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		margin-bottom: 1.25rem;
+		flex-wrap: wrap;
+		gap: 1rem;
+	}
+
+	.icon-pill {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5rem;
+		background: #e8f5e9;
+		color: #1b5e20;
+		font-size: 0.85rem;
+		font-weight: 700;
+		padding: 4px 12px;
+		border-radius: 999px;
+		margin-bottom: 0.5rem;
+	}
+
+	.card-title {
+		font-size: 1.4rem;
+		font-weight: 800;
+		color: #1b5e20;
+		margin: 0;
+	}
+
+	.btn-copy {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5rem;
+		background: #f1f8e9;
+		color: #1b5e20;
+		border: 1px solid rgba(27, 94, 32, 0.25);
+		padding: 0.6rem 1.15rem;
+		border-radius: 10px;
+		font-size: 0.9rem;
+		font-weight: 700;
+		cursor: pointer;
+		transition: all 0.2s ease;
+	}
+
+	.btn-copy:hover {
+		background: #1b5e20;
+		color: #ffffff;
+		transform: translateY(-1px);
+	}
+
+	.hashtags-container {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.75rem;
+	}
+
+	.tag-chip {
+		display: inline-flex;
+		align-items: center;
+		gap: 2px;
+		background: #f4fbf4;
+		color: #1b5e20;
+		border: 1px solid rgba(27, 94, 32, 0.18);
+		padding: 0.55rem 1.1rem;
+		border-radius: 999px;
+		font-size: 0.95rem;
+		font-weight: 700;
+		cursor: pointer;
+		transition: all 0.2s ease;
+		font-family: inherit;
+	}
+
+	.tag-chip:hover {
+		background: #1b5e20;
+		color: #ffffff;
+		border-color: #1b5e20;
+		transform: translateY(-2px);
+		box-shadow: 0 4px 12px rgba(27, 94, 32, 0.2);
+	}
+
+	.tag-chip.copied {
+		background: #4caf50;
+		color: #ffffff;
+		border-color: #4caf50;
+	}
+
+	.hash-symbol {
+		color: #4caf50;
+		font-weight: 800;
+	}
+
+	.tag-chip:hover .hash-symbol {
+		color: #a5d6a7;
+	}
+
+	.copy-toast {
+		position: fixed;
+		bottom: 24px;
+		left: 50%;
+		transform: translateX(-50%) translateY(100px);
+		background: #1b5e20;
+		color: #ffffff;
+		padding: 0.75rem 1.5rem;
+		border-radius: 999px;
+		font-size: 0.9rem;
+		font-weight: 700;
+		box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+		z-index: 1000;
+		opacity: 0;
+		transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+		pointer-events: none;
+	}
+
+	.copy-toast.visible {
+		transform: translateX(-50%) translateY(0);
+		opacity: 1;
+	}
+
+	@media (max-width: 640px) {
+		.hashtags-card {
+			padding: 1.25rem;
+		}
+		.card-title {
+			font-size: 1.25rem;
+		}
+		.btn-copy {
+			width: 100%;
+			justify-content: center;
+		}
+		.tag-chip {
+			font-size: 0.85rem;
+			padding: 0.45rem 0.9rem;
+		}
+	}
+</style>

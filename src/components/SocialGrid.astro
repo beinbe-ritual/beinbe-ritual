@@ -1,0 +1,149 @@
+---
+import SocialCard from './SocialCard.astro';
+import type { SocialLinks } from '../data/profile';
+
+interface Props {
+	links: SocialLinks;
+}
+
+const { links } = Astro.props;
+
+const socialItems = [
+	{
+		platform: 'website',
+		title: 'Website Chính Thức',
+		url: links.website,
+		handle: 'beinbe.com',
+		isNew: false,
+		iconName: 'website' as const,
+	},
+	{
+		platform: 'business_site',
+		title: 'Business Site',
+		url: links.business_site,
+		handle: 'beinbe.com/business-info',
+		isNew: true,
+		iconName: 'business_site' as const,
+	},
+	{
+		platform: 'facebook',
+		title: 'Facebook Fanpage',
+		url: links.facebook,
+		handle: '@beinbe.ritual',
+		isNew: false,
+		iconName: 'facebook' as const,
+	},
+	{
+		platform: 'instagram',
+		title: 'Instagram',
+		url: links.instagram,
+		handle: '@beinbe.ritual',
+		isNew: false,
+		iconName: 'instagram' as const,
+	},
+	{
+		platform: 'twitter',
+		title: 'Twitter (X)',
+		url: links.twitter,
+		handle: '@BeinbeGins2pu3',
+		isNew: true,
+		iconName: 'twitter' as const,
+	},
+	{
+		platform: 'tiktok',
+		title: 'TikTok',
+		url: links.tiktok,
+		handle: '@beinbe',
+		isNew: false,
+		iconName: 'tiktok' as const,
+	},
+	{
+		platform: 'youtube',
+		title: 'YouTube Official',
+		url: links.youtube,
+		handle: '@BeinbeGinsengSlim',
+		isNew: true,
+		iconName: 'youtube' as const,
+	},
+	{
+		platform: 'pinterest',
+		title: 'Pinterest',
+		url: links.pinterest,
+		handle: 'beinberitual',
+		isNew: true,
+		iconName: 'pinterest' as const,
+	},
+	{
+		platform: 'linkedin',
+		title: 'LinkedIn',
+		url: links.linkedin,
+		handle: 'beinbe-ginseng-slim',
+		isNew: true,
+		iconName: 'linkedin' as const,
+	},
+];
+---
+
+<section id="social-links" class="social-section">
+	<div class="section-header">
+		<h2 class="section-title">Kênh Truyền Thông & Mạng Xã Hội</h2>
+		<p class="section-subtitle">
+			Kết nối cùng Beinbe trên các nền tảng chính thức để cập nhật thông tin và mẹo làm đẹp vóc dáng mỗi ngày.
+		</p>
+	</div>
+
+	<div class="social-grid">
+		{socialItems.map((item) => (
+			<SocialCard
+				platform={item.platform}
+				title={item.title}
+				url={item.url}
+				handle={item.handle}
+				isNew={item.isNew}
+				iconName={item.iconName}
+			/>
+		))}
+	</div>
+</section>
+
+<style>
+	.social-section {
+		margin: 2.5rem 0;
+	}
+
+	.section-header {
+		text-align: center;
+		margin-bottom: 1.5rem;
+	}
+
+	.section-title {
+		font-size: 1.6rem;
+		font-weight: 800;
+		color: #1b5e20;
+		margin-bottom: 0.5rem;
+	}
+
+	.section-subtitle {
+		color: #556987;
+		font-size: 0.95rem;
+		max-width: 600px;
+		margin: 0 auto;
+		line-height: 1.5;
+	}
+
+	.social-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+		gap: 1rem;
+	}
+
+	@media (max-width: 640px) {
+		.social-grid {
+			grid-template-columns: 1fr;
+			gap: 0.75rem;
+		}
+		.section-title {
+			font-size: 1.35rem;
+		}
+	}
+</style>

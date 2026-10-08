@@ -1,0 +1,277 @@
+---
+import { convertDriveLink } from '../utils/helpers';
+import type { BrandInfo, DescriptionInfo, MediaInfo } from '../data/profile';
+
+interface Props {
+	brand: BrandInfo;
+	description: DescriptionInfo;
+	media: MediaInfo;
+	websiteUrl: string;
+}
+
+const { brand, description, media, websiteUrl } = Astro.props;
+
+const directLogo = convertDriveLink(media.logo_500x500);
+const directBg = convertDriveLink(media.background_1200x600);
+---
+
+<header class="profile-hero">
+	<!-- Hero Banner Background -->
+	<div class="banner-wrapper">
+		<img
+			src={directBg}
+			alt={`Hình nền thương hiệu ${brand.full_name}`}
+			class="banner-image"
+			loading="eager"
+			decoding="async"
+			onerror="this.onerror=null; this.classList.add('image-fallback');"
+		/>
+		<div class="banner-overlay"></div>
+	</div>
+
+	<!-- Profile Main Card -->
+	<div class="profile-card-container">
+		<div class="avatar-wrapper">
+			<img
+				src={directLogo}
+				alt={`Logo ${brand.full_name}`}
+				class="avatar-image"
+				width="140"
+				height="140"
+				loading="eager"
+				decoding="async"
+				onerror="this.onerror=null; this.src='/favicon.svg';"
+			/>
+			<div class="verified-badge" title="Tài khoản thương hiệu chính thức">
+				<svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16">
+					<path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+				</svg>
+			</div>
+		</div>
+
+		<div class="profile-title-area">
+			<div class="badge-brand">{brand.title_social_short}</div>
+			<h1 class="brand-long-title">{brand.title_social_long}</h1>
+			<p class="brand-username">@{brand.username}</p>
+		</div>
+
+		<p class="brand-short-desc">
+			{description.short}
+		</p>
+
+		<!-- Action Buttons -->
+		<div class="cta-group">
+			<a
+				href={websiteUrl}
+				target="_blank"
+				rel="noopener noreferrer"
+				class="btn btn-primary"
+			>
+				<span>Truy cập website</span>
+				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18">
+					<path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+					<polyline points="15 3 21 3 21 9"></polyline>
+					<line x1="10" y1="14" x2="21" y2="3"></line>
+				</svg>
+			</a>
+			<a href="#contact-info" class="btn btn-secondary">
+				<span>Liên hệ</span>
+				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18">
+					<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+				</svg>
+			</a>
+		</div>
+	</div>
+</header>
+
+<style>
+	.profile-hero {
+		position: relative;
+		border-radius: 20px;
+		overflow: hidden;
+		background: #ffffff;
+		box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+		margin-bottom: 2rem;
+		border: 1px solid rgba(27, 94, 32, 0.1);
+	}
+
+	.banner-wrapper {
+		position: relative;
+		width: 100%;
+		height: 240px;
+		background: linear-gradient(135deg, #1b5e20 0%, #2e7d32 50%, #4caf50 100%);
+		overflow: hidden;
+	}
+
+	.banner-image {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		object-position: center;
+		display: block;
+	}
+
+	.banner-image.image-fallback {
+		display: none;
+	}
+
+	.banner-overlay {
+		position: absolute;
+		inset: 0;
+		background: linear-gradient(to bottom, rgba(0, 0, 0, 0.15) 0%, rgba(27, 94, 32, 0.6) 100%);
+	}
+
+	.profile-card-container {
+		position: relative;
+		padding: 0 2rem 2rem 2rem;
+		text-align: center;
+	}
+
+	.avatar-wrapper {
+		position: relative;
+		width: 140px;
+		height: 140px;
+		margin: -70px auto 1rem auto;
+		border-radius: 50%;
+		background: #ffffff;
+		padding: 6px;
+		box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+		border: 3px solid #ffffff;
+	}
+
+	.avatar-image {
+		width: 100%;
+		height: 100%;
+		border-radius: 50%;
+		object-fit: cover;
+		background-color: #f1f8e9;
+		display: block;
+	}
+
+	.verified-badge {
+		position: absolute;
+		bottom: 6px;
+		right: 6px;
+		width: 28px;
+		height: 28px;
+		border-radius: 50%;
+		background: #4caf50;
+		color: #ffffff;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border: 2px solid #ffffff;
+		box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+	}
+
+	.profile-title-area {
+		margin-bottom: 0.75rem;
+	}
+
+	.badge-brand {
+		display: inline-block;
+		background: #e8f5e9;
+		color: #1b5e20;
+		font-weight: 700;
+		font-size: 0.85rem;
+		padding: 4px 14px;
+		border-radius: 999px;
+		margin-bottom: 0.5rem;
+		letter-spacing: 0.05em;
+		text-transform: uppercase;
+		border: 1px solid rgba(27, 94, 32, 0.2);
+	}
+
+	.brand-long-title {
+		font-size: 2rem;
+		font-weight: 800;
+		color: #1b5e20;
+		line-height: 1.25;
+		margin: 0 0 0.35rem 0;
+	}
+
+	.brand-username {
+		font-size: 1rem;
+		font-weight: 600;
+		color: #60739f;
+		margin: 0;
+	}
+
+	.brand-short-desc {
+		font-size: 1.05rem;
+		line-height: 1.6;
+		color: #374151;
+		max-width: 650px;
+		margin: 0.75rem auto 1.5rem auto;
+	}
+
+	.cta-group {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 1rem;
+		flex-wrap: wrap;
+	}
+
+	.btn {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5rem;
+		font-weight: 700;
+		font-size: 1rem;
+		padding: 0.85rem 1.75rem;
+		border-radius: 12px;
+		text-decoration: none;
+		transition: all 0.2s ease;
+		cursor: pointer;
+	}
+
+	.btn-primary {
+		background: #1b5e20;
+		color: #ffffff;
+		box-shadow: 0 4px 14px rgba(27, 94, 32, 0.35);
+	}
+
+	.btn-primary:hover {
+		background: #2e7d32;
+		color: #ffffff;
+		transform: translateY(-2px);
+		box-shadow: 0 6px 20px rgba(27, 94, 32, 0.45);
+	}
+
+	.btn-secondary {
+		background: #f1f8e9;
+		color: #1b5e20;
+		border: 1px solid rgba(27, 94, 32, 0.25);
+	}
+
+	.btn-secondary:hover {
+		background: #e8f5e9;
+		color: #1b5e20;
+		transform: translateY(-2px);
+	}
+
+	@media (max-width: 640px) {
+		.banner-wrapper {
+			height: 180px;
+		}
+		.avatar-wrapper {
+			width: 110px;
+			height: 110px;
+			margin-top: -55px;
+		}
+		.brand-long-title {
+			font-size: 1.5rem;
+		}
+		.profile-card-container {
+			padding: 0 1.25rem 1.5rem 1.25rem;
+		}
+		.brand-short-desc {
+			font-size: 0.95rem;
+		}
+		.btn {
+			width: 100%;
+			justify-content: center;
+		}
+	}
+</style>

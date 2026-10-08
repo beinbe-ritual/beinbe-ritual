@@ -1,6 +1,6 @@
 {
-	"name": "beinbe-ritual",
-	"description": "Build a personal website, blog, or portfolio with Astro.",
+	"name": "beinbe-ritual-profile",
+	"description": "Profile Page thương hiệu Beinbe Ginseng Slim",
 	"cloudflare": {
 		"label": "Astro Framework Starter",
 		"products": [
@@ -28,12 +28,13 @@
 	"private": true,
 	"scripts": {
 		"astro": "astro",
-		"build": "astro build",
+		"build": "ASTRO_TELEMETRY_DISABLED=1 astro build",
 		"cf-typegen": "wrangler types",
-		"check": "astro build && tsc && wrangler deploy --dry-run",
+		"check": "ASTRO_TELEMETRY_DISABLED=1 astro build && tsc && wrangler deploy --dry-run",
 		"deploy": "wrangler deploy",
-		"dev": "astro dev",
-		"preview": "astro build && wrangler dev"
+		"dev": "ASTRO_TELEMETRY_DISABLED=1 astro dev",
+		"preview": "npm run build && wrangler dev",
+		"test": "node --experimental-strip-types --test test/profile.test.mjs"
 	},
 	"type": "module"
 }

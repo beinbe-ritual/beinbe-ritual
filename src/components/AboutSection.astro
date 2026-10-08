@@ -1,0 +1,217 @@
+---
+import type { DescriptionInfo, PersonalInfo } from '../data/profile';
+
+interface Props {
+	description: DescriptionInfo;
+	bioHtml: string;
+	personalInfo: PersonalInfo;
+}
+
+const { description, bioHtml, personalInfo } = Astro.props;
+---
+
+<section id="about" class="about-section">
+	<div class="card about-card">
+		<div class="about-header">
+			<div class="icon-pill">
+				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+					<path d="M12 2a10 10 0 1 0 10 10H12V2z"></path>
+					<path d="M12 12 2.1 12a10.1 10.1 0 0 0 9.9 9.9V12z"></path>
+				</svg>
+				<span>Về Thương Hiệu</span>
+			</div>
+			<h2 class="card-title">Câu Chuyện & Sứ Mệnh Beinbe</h2>
+		</div>
+
+		<div class="card-body">
+			<p class="about-long-desc">
+				{description.long}
+			</p>
+
+			<!-- HTML Bio Highlight -->
+			<div class="bio-html-box">
+				<span class="bio-label">Official Bio:</span>
+				<div class="bio-content" set:html={bioHtml} />
+			</div>
+
+			<!-- Key Highlights Grid -->
+			<div class="highlights-grid">
+				<div class="highlight-item">
+					<div class="highlight-icon">
+						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+							<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+						</svg>
+					</div>
+					<div>
+						<div class="highlight-title">Kiểm Nghiệm Uy Tín</div>
+						<div class="highlight-desc">Chứng nhận & kiểm nghiệm bởi Viện Pasteur</div>
+					</div>
+				</div>
+
+				<div class="highlight-item">
+					<div class="highlight-icon">
+						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+							<path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"></path>
+							<path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"></path>
+						</svg>
+					</div>
+					<div>
+						<div class="highlight-title">Thành Phần Thiên Nhiên</div>
+						<div class="highlight-desc">Minh bạch dựa trên nghiên cứu khoa học</div>
+					</div>
+				</div>
+
+				<div class="highlight-item">
+					<div class="highlight-icon">
+						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+							<circle cx="12" cy="12" r="10"></circle>
+							<polyline points="12 6 12 12 16 14"></polyline>
+						</svg>
+					</div>
+					<div>
+						<div class="highlight-title">01 Gói Mỗi Ngày</div>
+						<div class="highlight-desc">Giải pháp vóc dáng bền vững cho người bận rộn</div>
+					</div>
+				</div>
+
+				<div class="highlight-item">
+					<div class="highlight-icon">
+						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+							<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+							<circle cx="12" cy="7" r="4"></circle>
+						</svg>
+					</div>
+					<div>
+						<div class="highlight-title">Đối tượng & Dịp kỉ niệm</div>
+						<div class="highlight-desc">Khách hàng: {personalInfo.gender} • Ngày thành lập: {personalInfo.birthday}</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<style>
+	.about-section {
+		margin-bottom: 2rem;
+	}
+
+	.about-card {
+		background: #ffffff;
+		border: 1px solid rgba(27, 94, 32, 0.12);
+		border-radius: 20px;
+		padding: 2rem;
+		box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+	}
+
+	.icon-pill {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5rem;
+		background: #e8f5e9;
+		color: #1b5e20;
+		font-size: 0.85rem;
+		font-weight: 700;
+		padding: 4px 12px;
+		border-radius: 999px;
+		margin-bottom: 0.75rem;
+	}
+
+	.card-title {
+		font-size: 1.6rem;
+		font-weight: 800;
+		color: #1b5e20;
+		margin: 0 0 1rem 0;
+	}
+
+	.about-long-desc {
+		font-size: 1.05rem;
+		line-height: 1.75;
+		color: #374151;
+		margin-bottom: 1.5rem;
+	}
+
+	.bio-html-box {
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+		background: #f8faf8;
+		border-left: 4px solid #1b5e20;
+		padding: 0.85rem 1.25rem;
+		border-radius: 0 10px 10px 0;
+		margin-bottom: 1.5rem;
+		font-size: 0.95rem;
+	}
+
+	.bio-label {
+		font-weight: 700;
+		color: #1b5e20;
+		font-size: 0.85rem;
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+	}
+
+	.bio-content :global(a) {
+		color: #1b5e20;
+		font-weight: 700;
+		text-decoration: underline;
+		transition: color 0.2s ease;
+	}
+
+	.bio-content :global(a:hover) {
+		color: #4caf50;
+	}
+
+	.highlights-grid {
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		gap: 1rem;
+	}
+
+	.highlight-item {
+		display: flex;
+		align-items: flex-start;
+		gap: 0.85rem;
+		padding: 1rem;
+		background: #fdfefe;
+		border: 1px solid rgba(27, 94, 32, 0.08);
+		border-radius: 12px;
+	}
+
+	.highlight-icon {
+		width: 38px;
+		height: 38px;
+		border-radius: 10px;
+		background: #e8f5e9;
+		color: #1b5e20;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-shrink: 0;
+	}
+
+	.highlight-title {
+		font-weight: 700;
+		font-size: 0.95rem;
+		color: #1b5e20;
+		margin-bottom: 0.25rem;
+	}
+
+	.highlight-desc {
+		font-size: 0.85rem;
+		color: #60739f;
+		line-height: 1.4;
+	}
+
+	@media (max-width: 640px) {
+		.about-card {
+			padding: 1.25rem;
+		}
+		.card-title {
+			font-size: 1.35rem;
+		}
+		.highlights-grid {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>

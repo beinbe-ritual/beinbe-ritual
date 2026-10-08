@@ -1,22 +1,65 @@
 ---
-// Import the global.css file here so that it is included on
-// all pages through the use of the <BaseHead /> component.
+// Import global styling
 import '../styles/global.css';
+import { profileData } from '../data/profile';
+import { convertDriveLink } from '../utils/helpers';
 
 interface Props {
-	title: string;
-	description: string;
+	title?: string;
+	description?: string;
 	image?: string;
+	canonicalUrl?: string;
 }
 
-const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const {
+	title = "Beinbe Ginseng Slim – Thương Hiệu Chăm Sóc Sức Khỏe Cho Người Bận Rộn",
+	description = "01 gói mỗi ngày hỗ trợ quản lý vóc dáng, chống oxy hóa và tăng cường trí nhớ. Thành phần thiên nhiên minh bạch, kiểm nghiệm bởi Viện Pasteur.",
+	image = convertDriveLink(profileData.media.background_1200x600),
+	canonicalUrl = "https://beinbe.com/",
+} = Astro.props;
 
-const { title, description, image = '/blog-placeholder-1.jpg' } = Astro.props;
+const directLogo = convertDriveLink(profileData.media.logo_500x500);
+
+// Structured Data (JSON-LD) for Organization
+const schemaOrg = {
+	"@context": "https://schema.org",
+	"@type": "Organization",
+	"name": profileData.brand.full_name,
+	"alternateName": profileData.brand.title_social_short,
+	"url": profileData.social_links.website,
+	"logo": directLogo,
+	"description": profileData.description.long,
+	"address": {
+		"@type": "PostalAddress",
+		"streetAddress": "Tầng 15, Tòa nhà Vincom Center, 72 Lê Thánh Tôn",
+		"addressLocality": "Quận 1",
+		"addressRegion": "TP. Hồ Chí Minh",
+		"addressCountry": "VN"
+	},
+	"contactPoint": {
+		"@type": "ContactPoint",
+		"telephone": profileData.contact.hotline,
+		"contactType": "customer service",
+		"email": profileData.contact.email,
+		"availableLanguage": ["Vietnamese", "English"]
+	},
+	"sameAs": [
+		profileData.social_links.website,
+		profileData.social_links.business_site,
+		profileData.social_links.facebook,
+		profileData.social_links.instagram,
+		profileData.social_links.twitter,
+		profileData.social_links.tiktok,
+		profileData.social_links.youtube,
+		profileData.social_links.pinterest,
+		profileData.social_links.linkedin
+	]
+};
 ---
 
 <!-- Global Metadata -->
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 <meta name="generator" content={Astro.generator} />
 
@@ -25,23 +68,30 @@ const { title, description, image = '/blog-placeholder-1.jpg' } = Astro.props;
 <link rel="preload" href="/fonts/atkinson-bold.woff" as="font" type="font/woff" crossorigin />
 
 <!-- Canonical URL -->
-<link rel="canonical" href={canonicalURL} />
+<link rel="canonical" href={canonicalUrl} />
 
 <!-- Primary Meta Tags -->
 <title>{title}</title>
 <meta name="title" content={title} />
 <meta name="description" content={description} />
+<meta name="keywords" content="beinbe, ginsengslim, beinbeginsengslim, dailyslimritual, deptubentrong, thực phẩm chức năng, chăm sóc sức khỏe" />
+<meta name="author" content="Beinbe Ginseng Slim" />
+<meta name="theme-color" content="#1b5e20" />
 
 <!-- Open Graph / Facebook -->
 <meta property="og:type" content="website" />
-<meta property="og:url" content={Astro.url} />
+<meta property="og:url" content={canonicalUrl} />
+<meta property="og:site_name" content="Beinbe Ginseng Slim" />
 <meta property="og:title" content={title} />
 <meta property="og:description" content={description} />
-<meta property="og:image" content={new URL(image, Astro.url)} />
+<meta property="og:image" content={image} />
 
 <!-- Twitter -->
 <meta property="twitter:card" content="summary_large_image" />
-<meta property="twitter:url" content={Astro.url} />
+<meta property="twitter:url" content={canonicalUrl} />
 <meta property="twitter:title" content={title} />
 <meta property="twitter:description" content={description} />
-<meta property="twitter:image" content={new URL(image, Astro.url)} />
+<meta property="twitter:image" content={image} />
+
+<!-- Structured Data (Schema.org JSON-LD) -->
+<script type="application/ld+json" set:html={JSON.stringify(schemaOrg)} />
